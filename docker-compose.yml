@@ -1,0 +1,25 @@
+version: "3.9"
+
+services:
+  swagger-editor:
+    image: swaggerapi/swagger-editor
+    container_name: "sandbox-swagger-editor"
+    ports:
+      - "10081:8080"
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    container_name: "sandbox-swagger-ui"
+    ports:
+      - "10082:8080"
+    volumes:
+      - ./openapi.yaml:/usr/share/nginx/html/openapi.yaml
+    environment:
+      API_URL: openapi.yaml
+  swagger-api:
+    image: stoplight/prism:4
+    container_name: "sandbox-prism-api"
+    ports:
+      - "10083:4010"
+    command: mock -h 0.0.0.0 /openapi.yaml;
+    volumes:
+      - ./openapi.yaml:/openapi.yaml
